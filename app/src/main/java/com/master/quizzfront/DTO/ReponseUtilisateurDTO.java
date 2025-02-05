@@ -7,12 +7,6 @@ public class ReponseUtilisateurDTO {
     private Integer questionId;
     private List<Integer> reponseIds;
 
-    public ReponseUtilisateurDTO(Integer tentativeId, Integer questionId, List<Integer> reponseIds) {
-        this.tentativeId = tentativeId;
-        this.questionId = questionId;
-        this.reponseIds = reponseIds;
-    }
-
     public Integer getTentativeId() {
         return tentativeId;
     }

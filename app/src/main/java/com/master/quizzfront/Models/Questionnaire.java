@@ -1,6 +1,8 @@
 package com.master.quizzfront.Models;
 
-public class Questionnaire {
+import java.io.Serializable;
+
+public class Questionnaire implements Serializable {
     private Integer id;
     private String titre;
     private String description;

@@ -8,13 +8,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import com.master.quizzfront.Api.ApiClient;
 import com.master.quizzfront.Api.UtilisateurApi;
 import com.master.quizzfront.Enum.UtilisateurStatut;
 import com.master.quizzfront.Models.Utilisateur;
 import com.master.quizzfront.R;
+import com.master.quizzfront.Utils.BaseToolbarActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -138,10 +137,7 @@ public class ProfilActivity extends BaseToolbarActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(ProfilActivity.this,
                             "Profil mis à jour avec succès", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ProfilActivity.this, AccueilAdminActivity.class);
-                    intent.putExtra("utilisateur", response.body());
-                    startActivity(intent);
-                    finish();
+                    retournerAccueil();
                 } else {
                     String messageErreur = extraireMessageErreur(response.errorBody());
                     Toast.makeText(ProfilActivity.this, messageErreur, Toast.LENGTH_LONG).show();
@@ -160,6 +156,10 @@ public class ProfilActivity extends BaseToolbarActivity {
     private void retournerAccueil() {
         if (UtilisateurStatut.Profeseur.equals(utilisateur.getStatut())) {
             Intent intent = new Intent(ProfilActivity.this, AccueilAdminActivity.class);
+            intent.putExtra("utilisateur", utilisateur);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(ProfilActivity.this, AccueilUtilisateurActivity.class);
             intent.putExtra("utilisateur", utilisateur);
             startActivity(intent);
         }

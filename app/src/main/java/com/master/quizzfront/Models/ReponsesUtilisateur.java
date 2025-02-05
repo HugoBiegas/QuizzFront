@@ -1,6 +1,8 @@
 package com.master.quizzfront.Models;
 
-public class ReponsesUtilisateur {
+import java.io.Serializable;
+
+public class ReponsesUtilisateur implements Serializable {
     private int idTentative;
     private int idQuestion;
     private int idReponse;

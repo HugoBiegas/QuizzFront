@@ -2,7 +2,9 @@ package com.master.quizzfront.Models;
 
 import com.master.quizzfront.Enum.TypeReponse;
 
-public class Question {
+import java.io.Serializable;
+
+public class Question implements Serializable {
     private Integer id;
     private String texteQuestion;
     private TypeReponse typeReponse;

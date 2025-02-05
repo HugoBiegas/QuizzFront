@@ -1,18 +1,18 @@
 package com.master.quizzfront.Models;
 
-public class Tentative {
+import java.io.Serializable;
+
+public class Tentative implements Serializable {
     private Integer id;
     private int idUtilisateur;
     private int idQuestionnaire;
     private int score;
     private String datePassage;
 
-    // Constructeur par défaut
     public Tentative() {
         this.score = 0;
     }
 
-    // Constructeur avec paramètres
     public Tentative(Integer id, int idUtilisateur, int idQuestionnaire, int score, String datePassage) {
         this.id = id;
         this.idUtilisateur = idUtilisateur;
@@ -21,7 +21,6 @@ public class Tentative {
         this.datePassage = datePassage;
     }
 
-    // Getters et Setters
     public Integer getId() {
         return id;
     }

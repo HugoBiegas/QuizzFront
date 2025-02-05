@@ -1,10 +1,12 @@
-package com.master.quizzfront.Activity;
+package com.master.quizzfront.Utils;
 
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import com.master.quizzfront.Activity.MainActivity;
+import com.master.quizzfront.Activity.ProfilActivity;
 import com.master.quizzfront.Models.Utilisateur;
 import com.master.quizzfront.R;
 
@@ -26,7 +28,7 @@ public abstract class BaseToolbarActivity extends AppCompatActivity {
         // Récupérer l'utilisateur
         utilisateur = (Utilisateur) getIntent().getSerializableExtra("utilisateur");
         if (utilisateur != null) {
-            String nomComplet = utilisateur.getPrenom() + " " + utilisateur.getNom();
+            String nomComplet = utilisateur.getPrenom() + " " + utilisateur.getNom() + " " + utilisateur.getStatut() ;
             textViewNomPrenom.setText(nomComplet);
         }
 

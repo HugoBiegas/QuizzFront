@@ -7,10 +7,6 @@ public class StartTentativeRequestDTO {
     private Utilisateur utilisateur;
     private Questionnaire questionnaire;
 
-    public StartTentativeRequestDTO(Utilisateur utilisateur, Questionnaire questionnaire) {
-        this.utilisateur = utilisateur;
-        this.questionnaire = questionnaire;
-    }
 
     public Utilisateur getUtilisateur() {
         return utilisateur;

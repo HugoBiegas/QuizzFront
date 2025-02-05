@@ -1,6 +1,8 @@
 package com.master.quizzfront.Models;
 
-public class Reponse {
+import java.io.Serializable;
+
+public class Reponse implements Serializable {
     private Integer id;
     private int idQuestion;
     private String texteReponse;

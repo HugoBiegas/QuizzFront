@@ -1,5 +1,6 @@
 package com.master.quizzfront.Api;
 
+import com.master.quizzfront.DTO.QuestionnaireDTO;
 import com.master.quizzfront.DTO.QuestionnaireDetailDTO;
 import com.master.quizzfront.Models.Questionnaire;
 
@@ -12,7 +13,7 @@ public interface QuestionnaireApi {
     Call<QuestionnaireDetailDTO> getQuestionnaireDetails(@Path("id") Integer id);
 
     @GET("/api/questionnaire/all")
-    Call<List<Questionnaire>> getAllQuestionnaires();
+    Call<List<QuestionnaireDTO>> getAllQuestionnaires();
 
     @POST("/api/questionnaire")
     Call<Questionnaire> createQuestionnaire(@Body Questionnaire questionnaire);

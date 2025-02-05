@@ -120,10 +120,13 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, AccueilAdminActivity.class);
                         intent.putExtra("utilisateur", utilisateur);
                         startActivity(intent);
-                        finish(); // Ferme l'activité de connexion
                     }else {
-                        Toast.makeText(MainActivity.this, "Vous n'êtes pas autorisé à accéder à cette application", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(MainActivity.this, AccueilUtilisateurActivity.class);
+                        intent.putExtra("utilisateur", utilisateur);
+                        startActivity(intent);
                     }
+                    finish();
+
                 } else {
                     String messageErreur = extraireMessageErreur(response.errorBody());
                     Toast.makeText(MainActivity.this, messageErreur, Toast.LENGTH_LONG).show();

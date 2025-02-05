@@ -2,6 +2,7 @@ package com.master.quizzfront.Api;
 
 import com.master.quizzfront.DTO.ReponseUtilisateurDTO;
 import com.master.quizzfront.DTO.StartTentativeRequestDTO;
+import com.master.quizzfront.DTO.TentativeDTO;
 import com.master.quizzfront.Models.Tentative;
 import retrofit2.Call;
 import retrofit2.http.*;
@@ -21,5 +22,5 @@ public interface TentativeApi {
     Call<Integer> getScore(@Path("tentativeId") Integer tentativeId);
 
     @GET("/api/tentative/user/{userId}/history")
-    Call<List<Tentative>> getUserHistory(@Path("userId") Integer userId);
+    Call<List<TentativeDTO>> getUserHistory(@Path("userId") Integer userId);
 }
