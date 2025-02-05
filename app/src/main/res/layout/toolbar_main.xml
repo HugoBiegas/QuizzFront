@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+        <TextView
+                android:id="@+id/textViewNomPrenom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_marginEnd="16dp"/>
+
+        <Button
+                android:id="@+id/buttonProfil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profil"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@android:color/white"/>
+
+        <Button
+                android:id="@+id/buttonDeconnexion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/deconnexion"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+</androidx.appcompat.widget.Toolbar>

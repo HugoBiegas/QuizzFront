@@ -20,6 +20,8 @@ import java.io.IOException;
 import okhttp3.ResponseBody;
 import org.json.JSONObject;
 
+import static com.master.quizzfront.Enum.UtilisateurStatut.Profeseur;
+
 public class MainActivity extends AppCompatActivity {
     private EditText champEmail;
     private EditText champMotDePasse;
@@ -98,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         String email = champEmail.getText().toString().trim();
         String motDePasse = champMotDePasse.getText().toString().trim();
 
-        // Validation des champs
         if (!validerEmail(email) || !validerMotDePasse(motDePasse)) {
             return;
         }
@@ -111,7 +112,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    Utilisateur utilisateur = response.body();
                     Toast.makeText(MainActivity.this, "Connexion réussie", Toast.LENGTH_SHORT).show();
+
+                    // Vérifier le statut de l'utilisateur
+                    if (Profeseur.equals(utilisateur.getStatut())) {
+                        Intent intent = new Intent(MainActivity.this, AccueilAdminActivity.class);
+                        intent.putExtra("utilisateur", utilisateur);
+                        startActivity(intent);
+                        finish(); // Ferme l'activité de connexion
+                    }else {
+                        Toast.makeText(MainActivity.this, "Vous n'êtes pas autorisé à accéder à cette application", Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     String messageErreur = extraireMessageErreur(response.errorBody());
                     Toast.makeText(MainActivity.this, messageErreur, Toast.LENGTH_LONG).show();

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">QuizzFront</string>
+    <string name="profil">Profil</string>
+    <string name="deconnexion">Déconnexion</string>
 </resources>

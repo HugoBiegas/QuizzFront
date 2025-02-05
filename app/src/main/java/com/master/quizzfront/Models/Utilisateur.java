@@ -2,7 +2,9 @@ package com.master.quizzfront.Models;
 
 import com.master.quizzfront.Enum.UtilisateurStatut;
 
-public class Utilisateur {
+import java.io.Serializable;
+
+public class Utilisateur implements Serializable {
     private Integer id;
     private String email;
     private String motDePasse;
