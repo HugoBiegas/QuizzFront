@@ -2,13 +2,11 @@ package com.master.quizzfront.Fragments;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.master.quizzfront.Adapters.UserPresentAdapter;
@@ -21,6 +19,8 @@ import com.master.quizzfront.R;
 import com.master.quizzfront.Api.AdminApi;
 import com.master.quizzfront.Models.Utilisateur;
 import com.master.quizzfront.Adapters.UserAdapter;
+
+import java.util.Arrays;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,40 +30,38 @@ public class UsersFragment extends Fragment {
     private ListView listViewPendingUsers;
     private ListView listViewAllUsers;
     private AdminApi adminApi;
-
     private AuthApi authApi;
-
     private UtilisateurApi utilisateurApi;
-
     private FloatingActionButton fabAddUser;
-
     private Utilisateur selectedUser;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_users, container, false);
         initialiserVue(view);
         initialiserApi();
-
         setupListeners();
-        loadPendingUsers();
-        loadAllUsers();
-
+        loadData();
         return view;
     }
 
-    private void initialiserVue(View view){
+    private void initialiserVue(View view) {
         listViewPendingUsers = view.findViewById(R.id.listViewPendingUsers);
         listViewAllUsers = view.findViewById(R.id.listViewAllUsers);
         fabAddUser = view.findViewById(R.id.fab_add_user);
     }
 
-    private void initialiserApi(){
+    private void initialiserApi() {
         adminApi = ApiClient.getRetrofitInstance().create(AdminApi.class);
         utilisateurApi = ApiClient.getRetrofitInstance().create(UtilisateurApi.class);
         authApi = ApiClient.getRetrofitInstance().create(AuthApi.class);
     }
+
+    private void loadData() {
+        loadPendingUsers();
+        loadAllUsers();
+    }
+
     private void setupListeners() {
         listViewPendingUsers.setOnItemClickListener((parent, view, position, id) -> {
             selectedUser = (Utilisateur) parent.getItemAtPosition(position);
@@ -84,38 +82,38 @@ public class UsersFragment extends Fragment {
         EditText editPassword = dialogView.findViewById(R.id.editPassword);
         EditText editNom = dialogView.findViewById(R.id.editNom);
         EditText editPrenom = dialogView.findViewById(R.id.editPrenom);
+        Spinner spinnerStatus = dialogView.findViewById(R.id.spinnerStatus);
+        spinnerStatus.setVisibility(View.GONE);
 
-        new AlertDialog.Builder(getContext())
+        editPassword.setVisibility(View.VISIBLE);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setTitle("Nouvel utilisateur")
                 .setView(dialogView)
-                .setPositiveButton("Créer", (dialog, which) -> {
+                .setPositiveButton("Créer", null)
+                .setNegativeButton("Annuler", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(dialogInterface -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                String email = editEmail.getText().toString().trim();
+                String password = editPassword.getText().toString().trim();
+                String nom = editNom.getText().toString().trim();
+                String prenom = editPrenom.getText().toString().trim();
+
+                if (validateFields(email, password, nom, prenom)) {
                     Utilisateur newUser = new Utilisateur();
-                    newUser.setEmail(editEmail.getText().toString());
-                    newUser.setMotDePasse(editPassword.getText().toString());
-                    newUser.setNom(editNom.getText().toString());
-                    newUser.setPrenom(editPrenom.getText().toString());
+                    newUser.setEmail(email);
+                    newUser.setMotDePasse(password);
+                    newUser.setNom(nom);
+                    newUser.setPrenom(prenom);
                     createUser(newUser);
-                })
-                .setNegativeButton("Annuler", null)
-                .show();
-    }
-
-    private void createUser(Utilisateur newUser) {
-        authApi.register(newUser).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
-                if (response.isSuccessful()) {
-                    loadPendingUsers();
-                    loadAllUsers();
-                    Toast.makeText(getContext(), "Utilisateur créé", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
                 }
-            }
-
-            @Override
-            public void onFailure(Call<Utilisateur> call, Throwable t) {
-                Toast.makeText(getContext(), "Erreur lors de la création", Toast.LENGTH_SHORT).show();
-            }
+            });
         });
+
+        dialog.show();
     }
 
     private void showUpdateDialog(UtilisateurDTO user) {
@@ -123,35 +121,110 @@ public class UsersFragment extends Fragment {
         EditText editEmail = dialogView.findViewById(R.id.editEmail);
         EditText editNom = dialogView.findViewById(R.id.editNom);
         EditText editPrenom = dialogView.findViewById(R.id.editPrenom);
+        EditText editPassword = dialogView.findViewById(R.id.editPassword);
+        Spinner spinnerStatus = dialogView.findViewById(R.id.spinnerStatus);
 
         editEmail.setText(user.getEmail());
         editNom.setText(user.getNom());
         editPrenom.setText(user.getPrenom());
+        editPassword.setVisibility(View.GONE);
 
-        new AlertDialog.Builder(getContext())
+        // Configuration du Spinner
+        ArrayAdapter<UtilisateurStatut> statusAdapter = new ArrayAdapter<>(
+                getContext(),
+                android.R.layout.simple_spinner_item,
+                UtilisateurStatut.values()
+        );
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStatus.setAdapter(statusAdapter);
+
+        // Sélectionner le statut actuel
+        int statusPosition = Arrays.asList(UtilisateurStatut.values())
+                .indexOf(UtilisateurStatut.valueOf(user.getStatut()));
+        spinnerStatus.setSelection(statusPosition);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setTitle("Modifier utilisateur")
                 .setView(dialogView)
-                .setPositiveButton("Modifier", (dialog, which) -> {
+                .setPositiveButton("Modifier", null)
+                .setNegativeButton("Annuler", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(dialogInterface -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                String email = editEmail.getText().toString().trim();
+                String nom = editNom.getText().toString().trim();
+                String prenom = editPrenom.getText().toString().trim();
+                UtilisateurStatut selectedStatus = (UtilisateurStatut) spinnerStatus.getSelectedItem();
+
+                if (validateFields(email, null, nom, prenom)) {
                     Utilisateur updatedUser = new Utilisateur();
                     updatedUser.setId(user.getId());
-                    updatedUser.setEmail(editEmail.getText().toString());
-                    updatedUser.setNom(editNom.getText().toString());
-                    updatedUser.setPrenom(editPrenom.getText().toString());
+                    updatedUser.setEmail(email);
+                    updatedUser.setNom(nom);
+                    updatedUser.setPrenom(prenom);
+                    updatedUser.setStatut(selectedStatus);
                     updateUser(updatedUser);
-                })
-                .setNegativeButton("Annuler", null)
-                .show();
+                    dialog.dismiss();
+                }
+            });
+        });
+
+        dialog.show();
+    }
+
+    private boolean validateFields(String email, String password, String nom, String prenom) {
+        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(getContext(), "Email invalide", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (password != null && password.length() < 6) {
+            Toast.makeText(getContext(), "Le mot de passe doit contenir au moins 6 caractères", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (nom.isEmpty()) {
+            Toast.makeText(getContext(), "Le nom est requis", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (prenom.isEmpty()) {
+            Toast.makeText(getContext(), "Le prénom est requis", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     private void showStatusDialog() {
-        UtilisateurStatut[] statuts = {UtilisateurStatut.Etudiant, UtilisateurStatut.Profeseur};
+        String[] statuts = {UtilisateurStatut.Etudiant.name(), UtilisateurStatut.Profeseur.name()};
         new AlertDialog.Builder(getContext())
                 .setTitle("Choisir un statut")
-                .setItems(new String[]{statuts[0].name(), statuts[1].name()}, (dialog, which) -> {
-                    selectedUser.setStatut(statuts[which]);
-                    updateUser(selectedUser);
+                .setItems(statuts, (dialog, which) -> {
+                    selectedUser.setStatut(UtilisateurStatut.valueOf(statuts[which]));
+                    updateUserStatus(selectedUser);
                 })
                 .show();
+    }
+
+    private void createUser(Utilisateur newUser) {
+        authApi.register(newUser).enqueue(new Callback<Utilisateur>() {
+            @Override
+            public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Utilisateur créé avec succès", Toast.LENGTH_SHORT).show();
+                    loadData();
+                } else {
+                    Toast.makeText(getContext(), "Erreur lors de la création", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Utilisateur> call, Throwable t) {
+                Toast.makeText(getContext(), "Erreur de connexion", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void updateUser(Utilisateur user) {
@@ -159,21 +232,41 @@ public class UsersFragment extends Fragment {
             @Override
             public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
                 if (response.isSuccessful()) {
-                    loadPendingUsers();
-                    loadAllUsers();
-                    Toast.makeText(getContext(), "Statut mis à jour", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Utilisateur mis à jour avec succès", Toast.LENGTH_SHORT).show();
+                    loadData();
+                } else {
+                    Toast.makeText(getContext(), "Erreur lors de la mise à jour", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Utilisateur> call, Throwable t) {
-                Toast.makeText(getContext(), "Erreur lors de la mise à jour", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Erreur de connexion", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateUserStatus(Utilisateur user) {
+        adminApi.updateUserStatus(user.getId(), user.getStatut()).enqueue(new Callback<Utilisateur>() {
+            @Override
+            public void onResponse(Call<Utilisateur> call, Response<Utilisateur> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Statut mis à jour avec succès", Toast.LENGTH_SHORT).show();
+                    loadData();
+                } else {
+                    Toast.makeText(getContext(), "Erreur lors de la mise à jour du statut", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Utilisateur> call, Throwable t) {
+                Toast.makeText(getContext(), "Erreur de connexion", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void loadPendingUsers() {
-        adminApi.getPendingUsers().enqueue(new Callback<>() {
+        adminApi.getPendingUsers().enqueue(new Callback<List<Utilisateur>>() {
             @Override
             public void onResponse(Call<List<Utilisateur>> call, Response<List<Utilisateur>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -193,26 +286,16 @@ public class UsersFragment extends Fragment {
         utilisateurApi.getAllUsers().enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<UtilisateurDTO>> call, Response<List<UtilisateurDTO>> response) {
-                if (response.isSuccessful()) {
-                    Log.d("API_RESPONSE", "Code: " + response.code());
-                    if (response.body() != null) {
-                        Log.d("API_RESPONSE", "Data: " + response.body().size());
-                        UserPresentAdapter adapter = new UserPresentAdapter(getContext(), response.body());
-                        listViewAllUsers.setAdapter(adapter);
-                    } else {
-                        Log.d("API_RESPONSE", "Body is null");
-                    }
-                } else {
-                    Log.d("API_RESPONSE", "Not successful: " + response.code());
+                if (response.isSuccessful() && response.body() != null) {
+                    UserPresentAdapter adapter = new UserPresentAdapter(getContext(), response.body());
+                    listViewAllUsers.setAdapter(adapter);
                 }
             }
 
             @Override
             public void onFailure(Call<List<UtilisateurDTO>> call, Throwable t) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
                 Toast.makeText(getContext(), "Erreur de chargement", Toast.LENGTH_SHORT).show();
             }
         });
     }
 }
-
