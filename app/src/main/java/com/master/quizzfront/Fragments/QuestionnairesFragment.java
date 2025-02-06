@@ -1,5 +1,6 @@
 package com.master.quizzfront.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.master.quizzfront.Activity.CreerQuestionnaireActivity;
+import com.master.quizzfront.Activity.ModifiactionQuestionnaireActivity;
 import com.master.quizzfront.Api.ApiClient;
+import com.master.quizzfront.Models.Utilisateur;
 import com.master.quizzfront.R;
 import com.master.quizzfront.Api.QuestionnaireApi;
 import com.master.quizzfront.DTO.QuestionnaireDTO;
@@ -22,6 +26,12 @@ public class QuestionnairesFragment extends Fragment {
     private ListView listViewQuestionnaires;
     private QuestionnaireApi questionnaireApi;
     private FloatingActionButton fabAddQuestionnaire;
+
+    private Utilisateur utilisateur;
+
+    public QuestionnairesFragment(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,8 +56,18 @@ public class QuestionnairesFragment extends Fragment {
     }
 
     private void setupListeners() {
+        listViewQuestionnaires.setOnItemClickListener((parent, view, position, id) -> {
+            QuestionnaireDTO questionnaire = (QuestionnaireDTO) parent.getItemAtPosition(position);
+            Intent intent = new Intent(getContext(), ModifiactionQuestionnaireActivity.class);
+            intent.putExtra("questionnaireId", questionnaire.getId());
+            intent.putExtra("utilisateur", utilisateur);
+            startActivity(intent);
+        });
         fabAddQuestionnaire.setOnClickListener(v -> {
             // Intent vers l'activité de création de questionnaire
+            Intent intent = new Intent(getContext(), CreerQuestionnaireActivity.class);
+            intent.putExtra("utilisateur", utilisateur);
+            startActivity(intent);
         });
     }
 

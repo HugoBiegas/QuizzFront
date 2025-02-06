@@ -29,7 +29,7 @@ public class AccueilAdminActivity extends BaseToolbarActivity {
             Fragment selectedFragment = null;
 
             if (item.getItemId() == R.id.navigation_questionnaires) {
-                selectedFragment = new QuestionnairesFragment();
+                selectedFragment = new QuestionnairesFragment(utilisateur);
             } else if (item.getItemId() == R.id.navigation_users) {
                 selectedFragment = new UsersFragment();
             }
@@ -48,7 +48,7 @@ public class AccueilAdminActivity extends BaseToolbarActivity {
     private void fragmentParDefault(){
         // Charger le fragment par défaut
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment, new QuestionnairesFragment())
+                .replace(R.id.nav_host_fragment, new QuestionnairesFragment(utilisateur))
                 .commit();
     }
 }
