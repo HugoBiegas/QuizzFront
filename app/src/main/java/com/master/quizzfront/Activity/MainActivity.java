@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         boutonInscription.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
             startActivity(intent);
+            finish();
         });
     }
 

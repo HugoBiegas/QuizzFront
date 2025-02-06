@@ -1,6 +1,8 @@
 package com.master.quizzfront.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.master.quizzfront.Adapters.QuestionResponseAdapter;
 import com.master.quizzfront.Api.ApiClient;
 import com.master.quizzfront.Api.TentativeApi;
+import com.master.quizzfront.DTO.QuestionnaireDTO;
 import com.master.quizzfront.DTO.TentativeDetailsDTO;
 import com.master.quizzfront.R;
 import com.master.quizzfront.Utils.BaseToolbarActivity;
@@ -19,6 +22,8 @@ public class ResponseQuestionnaireActivity extends BaseToolbarActivity {
 
     private RecyclerView recyclerViewQuestions;
     private TextView textViewScore;
+
+    private Button buttonRetour;
     private TentativeApi tentativeApi;
     private int tentativeId;
 
@@ -36,6 +41,7 @@ public class ResponseQuestionnaireActivity extends BaseToolbarActivity {
         }
 
         initializeViews();
+        setupListeners();
         setupApi();
         loadTentativeDetails();
     }
@@ -43,8 +49,17 @@ public class ResponseQuestionnaireActivity extends BaseToolbarActivity {
     private void initializeViews() {
         recyclerViewQuestions = findViewById(R.id.recyclerViewQuestions);
         textViewScore = findViewById(R.id.textViewScore);
+        buttonRetour = findViewById(R.id.buttonRetourHomeUtilisateur);
 
         recyclerViewQuestions.setLayoutManager(new LinearLayoutManager(this));
+    }
+    private void setupListeners() {
+        buttonRetour.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AccueilUtilisateurActivity.class);
+            intent.putExtra("utilisateur", utilisateur);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void setupApi() {

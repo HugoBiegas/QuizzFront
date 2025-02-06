@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ReponseQuestionnaireActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".Activity.ResponseQuestionnaireActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <include
+            android:id="@+id/includeToolbar"
+            layout="@layout/toolbar_main"/>
+
+    <!-- En-tête avec score -->
+    <TextView
+            android:id="@+id/textViewScore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="16dp"
+            android:background="#F5F5F5"
+            tools:text="Score : 85%"/>
+
+    <!-- Liste des questions -->
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewQuestions"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:clipToPadding="false"/>
+
+    <!-- Bouton retour -->
+    <Button
+            android:id="@+id/buttonRetourHomeUtilisateur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="Retour à l'accueil"/>
+
+</LinearLayout>

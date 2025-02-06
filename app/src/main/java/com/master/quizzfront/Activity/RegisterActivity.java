@@ -1,5 +1,6 @@
 package com.master.quizzfront.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.Button;
@@ -47,7 +48,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void configurerEcouteurs() {
         boutonInscription.setOnClickListener(v -> traiterInscription());
-        boutonRetour.setOnClickListener(v -> finish());
+        boutonRetour.setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private boolean validerChamps() {
@@ -133,6 +138,8 @@ public class RegisterActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(RegisterActivity.this,
                             "Compte créé avec succès", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    startActivity(intent);
                     finish(); // Retour à l'écran de connexion
                 } else {
                     String messageErreur = extraireMessageErreur(response.errorBody());

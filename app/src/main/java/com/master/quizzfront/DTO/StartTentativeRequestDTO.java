@@ -1,27 +1,43 @@
 package com.master.quizzfront.DTO;
 
-import com.master.quizzfront.Models.Questionnaire;
-import com.master.quizzfront.Models.Utilisateur;
-
 public class StartTentativeRequestDTO {
-    private Utilisateur utilisateur;
-    private Questionnaire questionnaire;
+    private SimpleIdWrapper utilisateur;
+    private SimpleIdWrapper questionnaire;
 
+    public static class SimpleIdWrapper {
+        private Integer id;
 
-    public Utilisateur getUtilisateur() {
+        public SimpleIdWrapper(Integer id) {
+            this.id = id;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+    }
+
+    public StartTentativeRequestDTO(Integer userId, Integer questionnaireId) {
+        this.utilisateur = new SimpleIdWrapper(userId);
+        this.questionnaire = new SimpleIdWrapper(questionnaireId);
+    }
+
+    public SimpleIdWrapper getUtilisateur() {
         return utilisateur;
     }
 
-    public void setUtilisateur(Utilisateur utilisateur) {
+    public void setUtilisateur(SimpleIdWrapper utilisateur) {
         this.utilisateur = utilisateur;
     }
 
-    public Questionnaire getQuestionnaire() {
+    public SimpleIdWrapper getQuestionnaire() {
         return questionnaire;
     }
 
-    public void setQuestionnaire(Questionnaire questionnaire) {
+    public void setQuestionnaire(SimpleIdWrapper questionnaire) {
         this.questionnaire = questionnaire;
     }
 }
-

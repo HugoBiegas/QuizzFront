@@ -4,61 +4,56 @@ import java.io.Serializable;
 
 public class Tentative implements Serializable {
     private Integer id;
-    private int idUtilisateur;
-    private int idQuestionnaire;
-    private int score;
+    private IdWrapper idUtilisateur;
+    private IdWrapper idQuestionnaire;
+    private Integer score;
     private String datePassage;
 
-    public Tentative() {
-        this.score = 0;
+    public static class IdWrapper implements Serializable {
+        private Integer id;
+        private String email;
+        private String motDePasse;
+        private String nom;
+        private String prenom;
+        private String statut;
+        private String dateCreation;
+
+        // Getters et Setters
+        public Integer getId() { return id; }
+        public void setId(Integer id) { this.id = id; }
+
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+
+        public String getMotDePasse() { return motDePasse; }
+        public void setMotDePasse(String motDePasse) { this.motDePasse = motDePasse; }
+
+        public String getNom() { return nom; }
+        public void setNom(String nom) { this.nom = nom; }
+
+        public String getPrenom() { return prenom; }
+        public void setPrenom(String prenom) { this.prenom = prenom; }
+
+        public String getStatut() { return statut; }
+        public void setStatut(String statut) { this.statut = statut; }
+
+        public String getDateCreation() { return dateCreation; }
+        public void setDateCreation(String dateCreation) { this.dateCreation = dateCreation; }
     }
 
-    public Tentative(Integer id, int idUtilisateur, int idQuestionnaire, int score, String datePassage) {
-        this.id = id;
-        this.idUtilisateur = idUtilisateur;
-        this.idQuestionnaire = idQuestionnaire;
-        this.score = score;
-        this.datePassage = datePassage;
-    }
+    // Getters et Setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public Integer getId() {
-        return id;
-    }
+    public IdWrapper getIdUtilisateur() { return idUtilisateur; }
+    public void setIdUtilisateur(IdWrapper idUtilisateur) { this.idUtilisateur = idUtilisateur; }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public IdWrapper getIdQuestionnaire() { return idQuestionnaire; }
+    public void setIdQuestionnaire(IdWrapper idQuestionnaire) { this.idQuestionnaire = idQuestionnaire; }
 
-    public int getIdUtilisateur() {
-        return idUtilisateur;
-    }
+    public Integer getScore() { return score; }
+    public void setScore(Integer score) { this.score = score; }
 
-    public void setIdUtilisateur(int idUtilisateur) {
-        this.idUtilisateur = idUtilisateur;
-    }
-
-    public int getIdQuestionnaire() {
-        return idQuestionnaire;
-    }
-
-    public void setIdQuestionnaire(int idQuestionnaire) {
-        this.idQuestionnaire = idQuestionnaire;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public String getDatePassage() {
-        return datePassage;
-    }
-
-    public void setDatePassage(String datePassage) {
-        this.datePassage = datePassage;
-    }
+    public String getDatePassage() { return datePassage; }
+    public void setDatePassage(String datePassage) { this.datePassage = datePassage; }
 }
-

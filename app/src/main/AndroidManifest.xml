@@ -20,6 +20,10 @@
                 android:name=".Activity.QuestionnaireActivity"
                 android:exported="false"/>
         <activity
+                android:name=".Activity.ResponseQuestionnaireActivity"
+                android:exported="false"/>
+
+        <activity
                 android:name=".Activity.AccueilUtilisateurActivity"
                 android:exported="false"/>
         <activity

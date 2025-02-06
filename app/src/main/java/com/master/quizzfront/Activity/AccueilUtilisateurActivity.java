@@ -30,17 +30,23 @@ public class AccueilUtilisateurActivity extends BaseToolbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil_utilisateur);
         setupToolbar();
-
-        listViewQuestionnaires = findViewById(R.id.listViewQuestionnaires);
-        listViewTentatives = findViewById(R.id.listViewTentatives);
-        listViewTentatives.setEnabled(false);
-
-        questionnaireApi = ApiClient.getRetrofitInstance().create(QuestionnaireApi.class);
-        tentativeApi = ApiClient.getRetrofitInstance().create(TentativeApi.class);
+        initialiserVues();
+        initialiserApi();
 
         loadQuestionnaires();
         loadTentatives();
         setupListeners();
+    }
+
+    private void initialiserVues(){
+        listViewQuestionnaires = findViewById(R.id.listViewQuestionnaires);
+        listViewTentatives = findViewById(R.id.listViewTentatives);
+
+    }
+
+    private void initialiserApi(){
+        questionnaireApi = ApiClient.getRetrofitInstance().create(QuestionnaireApi.class);
+        tentativeApi = ApiClient.getRetrofitInstance().create(TentativeApi.class);
     }
 
     private void setupListeners() {
@@ -50,11 +56,21 @@ public class AccueilUtilisateurActivity extends BaseToolbarActivity {
             intent.putExtra("questionnaireId", questionnaire.getId());
             intent.putExtra("utilisateur", utilisateur);
             startActivity(intent);
+            finish();
+        });
+
+        listViewTentatives.setOnItemClickListener((parent, view, position, id) -> {
+            TentativeDTO tentative = (TentativeDTO) parent.getItemAtPosition(position);
+            Intent intent = new Intent(AccueilUtilisateurActivity.this, ResponseQuestionnaireActivity.class);
+            intent.putExtra("tentativeId", tentative.getId());
+            intent.putExtra("utilisateur", utilisateur);
+            startActivity(intent);
+            finish();
         });
     }
 
     private void loadQuestionnaires() {
-        questionnaireApi.getAllQuestionnaires().enqueue(new Callback<List<QuestionnaireDTO>>() {
+        questionnaireApi.getAllQuestionnaires().enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<QuestionnaireDTO>> call, Response<List<QuestionnaireDTO>> response) {
                 if (response.isSuccessful() && response.body() != null) {
